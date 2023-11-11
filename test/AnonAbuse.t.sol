@@ -45,7 +45,7 @@ contract AnonAbuseTest is Test {
 
     function testGetters() public {
         // Retrieve the merkleRoot for this groupId
-        address[] memory leafs = anonAbuse.getLeafsromAttackerAddress(hackerAddress);
+        address[] memory leafs = anonAbuse.getLeavesFromAttackerAddress(hackerAddress);
 
         for (uint i = 0; i < NUM_TESTS; i++) {
             console.log("locally stored address: %s\n, smart contract stored address: %s", hackedAddress[i], leafs[i]);
