@@ -22,18 +22,6 @@ contract AnonAbuse {
     mapping(uint256 => treeMetaData) public treeMetaDataByID;
 
     ///////////////////////////////////////////////////////////////////////////////
-    ///                                  ERRORS                                 ///
-    ///////////////////////////////////////////////////////////////////////////////
-
-    /// @notice An error raised when routing is requested for a group that does not exist.
-    ///
-    /// @param groupId The group identifier that was requested but does not exist.
-    error NoSuchGroup(uint256 groupId);
-
-    /// @notice The requested group has been disabled.
-    error GroupIsDisabled();
-
-    ///////////////////////////////////////////////////////////////////////////////
     ///                                  EVENTS                                 ///
     ///////////////////////////////////////////////////////////////////////////////
 
