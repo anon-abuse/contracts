@@ -4,19 +4,26 @@ pragma solidity ^0.8.13;
 import "forge-std/Test.sol";
 import "forge-std/console.sol";
 import "../src/AnonAbuse.sol";
+import "./lib/Loader.sol";
 
-
-contract AnonAbuseTest is Test {
+contract AnonAbuseTest is Test, Loader {
     AnonAbuse public anonAbuse;
     uint256 constant NUM_TESTS = 10;
     address[] hackedAddress;
     address hackerAddress;
     bytes32 groupMerkleRoot;
 
+    UserData[] public userDatas;
 
     function setUp() public {
         anonAbuse = new AnonAbuse();
         populateContractStructure();
+        
+        string memory root = vm.projectRoot();
+        for (uint i = 0; i < 8; i++) {
+            userDatas.push(loadUserData(root, i));
+            console.log(userDatas[i].compressedPublicKey);
+        }
     }
 
     function populateContractStructure() public {
