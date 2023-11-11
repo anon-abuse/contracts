@@ -73,10 +73,11 @@ contract AnonAbuse {
 
     // Setter functions
     function entryPoint(
-        Groth16Proof memory rugProof,
-        Groth16Proof memory groupMerkleTreeConstruction,
+        // Groth16Proof memory rugProof,
+        // Groth16Proof memory groupMerkleTreeConstruction,
         bytes32 groupMerkleRoot,
-        address hackerAddress
+        address hackerAddress,
+        address attackedAddress
     )
     public
     {
@@ -90,11 +91,12 @@ contract AnonAbuse {
     // Check if hackerAddress is already present in the mapping
     if (treeMetaDataByID[hackerAddressAsUint].merkleRoot != bytes32(0)) {
         // hackerAddress is present, so update the corresponding value
-        treeMetaDataByID[hackerAddressAsUint].merkleRoot = groupMerkleRoot;
+        updateTreeMetaDataByID(hackerAddressAsUint, groupMerkleRoot, attackedAddress);
         emit GroupAdded(hackerAddressAsUint,  groupMerkleRoot);
     } else {
         // hackerAddress is not present, so create a new key-value pair
         bytes32 oldMerkleRoot = treeMetaDataByID[hackerAddressAsUint].merkleRoot;
+        updateTreeMetaDataByID(hackerAddressAsUint, groupMerkleRoot, attackedAddress);
         emit GroupUpdated(hackerAddressAsUint, oldMerkleRoot, groupMerkleRoot);
     }   
     }
