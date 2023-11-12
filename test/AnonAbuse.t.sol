@@ -22,6 +22,8 @@ contract AnonAbuseTest is Test, Loader {
         string memory root = vm.projectRoot();
         for (uint i = 0; i < 8; i++) {
             userDatas.push(loadUserData(root, i));
+            console.logBytes32(userDatas[i].privateKey);
+            console.logBytes(userDatas[i].uncompressedPublicKey);
             console.log(userDatas[i].compressedPublicKey);
         }
     }
