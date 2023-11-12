@@ -16,3 +16,4 @@ docs/
 #others
 pyscript/
 requirements.txt
+node_modules/
