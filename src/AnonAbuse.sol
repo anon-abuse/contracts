@@ -1,13 +1,10 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.13;
 
-struct Groth16Proof {
-  uint256[2] a;
-  uint256[2][2] b;
-  uint256[2] c;
-}
+import {IBonsaiRelay} from "bonsai/IBonsaiRelay.sol";
+import {BonsaiCallbackReceiver} from "bonsai/BonsaiCallbackReceiver.sol";
 
-contract AnonAbuse {
+contract AnonAbuse is BonsaiCallbackReceiver{
 
   /// treeMetaData structure, includes
   /// merkle root of the group tree
@@ -18,6 +15,9 @@ contract AnonAbuse {
   }
 
   mapping(uint256 => treeMetaData) public treeMetaDataByID;
+
+  /// @notice Initialize the contract, binding it to a specified Bonsai relay and RISC Zero guest image.
+  constructor(IBonsaiRelay bonsaiRelay) BonsaiCallbackReceiver(bonsaiRelay) {}
 
   ///////////////////////////////////////////////////////////////////////////////
   ///                                  EVENTS                                 ///
@@ -59,8 +59,9 @@ contract AnonAbuse {
 
   // Setter functions
   function entryPoint(
-    // Groth16Proof memory rugProof,
-    // Groth16Proof memory groupMerkleTreeConstruction,
+    // bytes32 imageId, 
+    // bytes calldata journal, 
+    // CallbackAuthorization calldata auth,
     bytes32 groupMerkleRoot,
     address hackerAddress,
     address attackedAddress
@@ -71,8 +72,8 @@ contract AnonAbuse {
     uint256 hackerAddressAsUint = getGroupdIdFromAttackerAddress(hackerAddress);
 
     //require valid rugProof from Risc0 Bonsai VM
-    // require(verifySignature(rugProof.a, rugProof.b, rugProof.c, groupMerkleRoot,
-    //                         hackerAddress), "Invalid Risc0 Proof");
+    // require(bonsaiRelay.callbackIsAuthorized(imageId, journal, auth), "Invalid Risc0 Proof");
+
 
     // Check if hackerAddress is already present in the mapping
     if (treeMetaDataByID[hackerAddressAsUint].merkleRoot != bytes32(0)) {
