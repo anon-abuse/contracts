@@ -8,7 +8,7 @@ import "./lib/Loader.sol";
 
 contract AnonAbuseTest is Test, Loader {
     AnonAbuse public anonAbuse;
-    uint256 constant NUM_TESTS = 10;
+    uint256 constant NUM_TESTS = 8;
     address[] hackedAddress;
     address hackerAddress;
     bytes32 groupMerkleRoot;
@@ -20,7 +20,7 @@ contract AnonAbuseTest is Test, Loader {
         populateContractStructure();
         
         string memory root = vm.projectRoot();
-        for (uint i = 0; i < 8; i++) {
+        for (uint i = 0; i < NUM_TESTS; i++) {
             userDatas.push(loadUserData(root, i));
             console.logBytes32(userDatas[i].privateKey);
             console.logBytes(userDatas[i].uncompressedPublicKey);
@@ -57,7 +57,6 @@ contract AnonAbuseTest is Test, Loader {
         address[] memory leafs = anonAbuse.getLeavesFromAttackerAddress(hackerAddress);
 
         for (uint i = 0; i < NUM_TESTS; i++) {
-            console.log("locally stored address: %s\n, smart contract stored address: %s", hackedAddress[i], leafs[i]);
             assertEq(hackedAddress[i], leafs[i]);
         }
     }

@@ -5,7 +5,7 @@ import "forge-std/Script.sol";
 import "../src/AnonAbuse.sol";
 import "../test/lib/Loader.sol";
 
-contract CounterScript is Script, Loader {
+contract AnonAbuseScript is Script, Loader {
 
     UserData[] public userDatas;
     AnonAbuse public anonAbuse;
@@ -25,11 +25,35 @@ contract CounterScript is Script, Loader {
     }
 
     function run() public {
+
+        fundAttackedAddressPreAttack();
+
+        logBalances("pre-attack state");
+
+        drainAttackedAddress();
+
+        logBalances("post-attack state");
+
         vm.startBroadcast();
 
         populateContractStructure();
 
         vm.stopBroadcast();
+    }
+
+
+    function fundAttackedAddressPreAttack() public {
+        for (uint i = 0; i < NUM_ADDRESS; i++) {
+            vm.deal(userDatas[i].compressedPublicKey, 1 ether);
+        }
+    }
+
+    function drainAttackedAddress() public {
+        for (uint i = 0; i < NUM_ADDRESS; i++) {
+            vm.prank(userDatas[i].compressedPublicKey);
+            address targetAddress = address(0x00000000000000000000);
+            payable(targetAddress).transfer(1 ether);
+        }
     }
 
     function randomHackerAddress() internal view returns (address) {
@@ -41,8 +65,20 @@ contract CounterScript is Script, Loader {
         for (uint i = 0; i < NUM_ADDRESS; i++) {
             address currentHackedAddress = userDatas[i].compressedPublicKey;
             bytes32 groupMerkleRoot = keccak256(abi.encodePacked(block.timestamp, block.difficulty, currentHackedAddress));
-            anonAbuse.entryPoint(groupMerkleRoot, attackerAddress, currentHackedAddress);
+            address zeroAddress = address(0x00000000000000000000);
+            anonAbuse.entryPoint(groupMerkleRoot, zeroAddress, currentHackedAddress);
         }
+    }
 
+    function logBalances(string memory state) public {
+        for (uint i = 0; i < NUM_ADDRESS; i++) {
+            // Retrieve the balance of each address
+            uint balance = userDatas[i].compressedPublicKey.balance;
+
+            // Log the balance to the console
+            console.log(state);
+            console.log("Address:", userDatas[i].compressedPublicKey);
+            console.log("Balance:", balance);
+        }
     }
 }

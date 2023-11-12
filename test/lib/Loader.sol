@@ -10,7 +10,7 @@ contract Loader is Test{
     /// @notice represents user data, aka private key, uncompressed and compressed public keys.
     /// access equivalent data by same index.
    struct UserData {
-        address compressedPublicKey;
+        address payable compressedPublicKey;
         bytes32 privateKey;
         bytes uncompressedPublicKey;
     }
