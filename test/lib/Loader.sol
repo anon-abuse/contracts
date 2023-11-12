@@ -10,9 +10,9 @@ contract Loader is Test{
     /// @notice represents user data, aka private key, uncompressed and compressed public keys.
     /// access equivalent data by same index.
    struct UserData {
+        address compressedPublicKey;
         bytes32 privateKey;
         bytes uncompressedPublicKey;
-        address compressedPublicKey;
     }
 
 
@@ -36,9 +36,9 @@ contract Loader is Test{
         returns (UserData memory)
     {
         return UserData(
+            userData.compressedPublicKey,
             userData.privateKey,
-            userData.uncompressedPublicKey,
-            userData.compressedPublicKey
+            userData.uncompressedPublicKey
         );
     }
 
