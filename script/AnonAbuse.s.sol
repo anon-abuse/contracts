@@ -22,9 +22,13 @@ contract CounterScript is Script, Loader {
         }
 
         attackerAddress = randomHackerAddress();
+
+        console.log(attackerAddress);
     }
 
     function run() public {
+        setUp();
+
         vm.startBroadcast();
 
         populateContractStructure();
