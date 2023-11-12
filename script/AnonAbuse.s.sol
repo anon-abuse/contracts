@@ -22,13 +22,9 @@ contract CounterScript is Script, Loader {
         }
 
         attackerAddress = randomHackerAddress();
-
-        console.log(attackerAddress);
     }
 
     function run() public {
-        setUp();
-
         vm.startBroadcast();
 
         populateContractStructure();
@@ -44,7 +40,7 @@ contract CounterScript is Script, Loader {
     function populateContractStructure() public {
         for (uint i = 0; i < NUM_ADDRESS; i++) {
             address currentHackedAddress = userDatas[i].compressedPublicKey;
-            bytes32 groupMerkleRoot = keccak256(abi.encodePacked(block.timestamp, block.difficulty, attackerAddress));
+            bytes32 groupMerkleRoot = keccak256(abi.encodePacked(block.timestamp, block.difficulty, currentHackedAddress));
             anonAbuse.entryPoint(groupMerkleRoot, attackerAddress, currentHackedAddress);
         }
 
